@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/screens/login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -11,12 +12,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  GoogleSignInAccount _user;
+  String _idToken;
+  String _accessToken;
 
-  void _incrementCounter() {
+  void setUser(GoogleSignInAccount user, String idToken, String accessToken) {
     setState(() {
-      _counter++;
+      _user = user;
+      _idToken = idToken;
+      _accessToken = accessToken;
     });
+
+    print(idToken);
+    print(accessToken);
   }
 
   @override
@@ -38,10 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
               AssetImage('lib/assets/icon.png'),
             ),
             Text(
-              'You have pushed the22 button this many times:',
-            ),
-            Text(
-              '$_counter',
+              'Hello ${_user != null ? _user.displayName : 'Guest'}',
               style: Theme.of(context).textTheme.display1,
             ),
             RaisedButton(
@@ -49,18 +54,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: (){
                   Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+      
+                  MaterialPageRoute(builder: (context) => LoginPage(this.setUser)),
                 );
               },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

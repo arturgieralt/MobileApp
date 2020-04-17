@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +34,7 @@ namespace WebApi
                 .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = "https://localhost:5000";
-                    options.ApiName = "api1";
+                    options.ApiName = "api";
                     options.ApiSecret = "49C1A7E1-0C79-4A89-A3D6-A37998FB86B0";
                     options.EnableCaching = true;
                 });

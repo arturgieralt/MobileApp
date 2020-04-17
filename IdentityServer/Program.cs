@@ -75,7 +75,7 @@ namespace IdentityServer
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
-                    webBuilder.UseUrls("https://localhost:5000/", "http://localhost:5010/");
+                    webBuilder.UseUrls("http://localhost:5000/");
                 });
     }
 }

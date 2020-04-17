@@ -33,7 +33,8 @@ namespace WebApi
                 IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://localhost:5000";
+                    //change each time ngrok is ran
+                    options.Authority = "https://d0447994.ngrok.io/";
                     options.ApiName = "api";
                     options.ApiSecret = "49C1A7E1-0C79-4A89-A3D6-A37998FB86B0";
                     options.EnableCaching = true;

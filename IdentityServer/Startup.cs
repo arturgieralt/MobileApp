@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace IdentityServer
 {
@@ -84,6 +85,18 @@ namespace IdentityServer
                 app.UseDatabaseErrorPage();
             }
 
+            var forwardOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+                RequireHeaderSymmetry = false
+            };
+
+            forwardOptions.KnownNetworks.Clear();
+            forwardOptions.KnownProxies.Clear();
+
+            // ref: https://github.com/aspnet/Docs/issues/2384
+            app.UseForwardedHeaders(forwardOptions);
+
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             
@@ -94,6 +107,8 @@ namespace IdentityServer
             {
                 endpoints.MapDefaultControllerRoute();
             });
+
+            
         }
     }
 }

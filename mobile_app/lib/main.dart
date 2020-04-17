@@ -1,5 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_appauth/flutter_appauth.dart';
 
 void main() => runApp(MyApp());
@@ -30,9 +32,10 @@ class _MyAppState extends State<MyApp> {
 
   final String _clientId = 'native.code';
   final String _redirectUrl = 'io.identityserver.demo:/oauthredirect';
-  final String _issuer = '10.0.2.2:5000';
+  // has to change that each time ngrok is ran
+  final String _issuer = 'https://d0447994.ngrok.io/';
   final String _discoveryUrl =
-      '10.0.2.2:5000/.well-known/openid-configuration';
+      'https://d0447994.ngrok.io/.well-known/openid-configuration';
   final List<String> _scopes = <String>[
     'openid',
     'profile',
@@ -43,8 +46,8 @@ class _MyAppState extends State<MyApp> {
 
   final AuthorizationServiceConfiguration _serviceConfiguration =
       AuthorizationServiceConfiguration(
-          '10.0.2.2:5000/connect/authorize',
-          '10.0.2.2:5000/connect/token');
+          'https://d0447994.ngrok.io/connect/authorize',
+          'https://d0447994.ngrok.io/connect/token');
 
   @override
   void initState() {
@@ -238,12 +241,26 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _testApi(TokenResponse response) async {
-    final http.Response httpResponse = await http.get(
-        '10.0.2.2:5002/weatherforecast',
-        headers: <String, String>{'Authorization': 'Bearer $_accessToken'});
+    print('testing api');
+    try
+    {
+      HttpClient client = new HttpClient();
+    client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+  // this is hack just to get the data from API!
+    
+    HttpClientRequest request = await client.getUrl(Uri.parse('http://10.0.2.2:5001/weatherforecast'));
+    request.headers.set('Authorization', 'Bearer $_accessToken'); 
+    HttpClientResponse response = await request.close();
+    String reply = await response.transform(utf8.decoder).join();
     setState(() {
-      _userInfo = httpResponse.statusCode == 200 ? httpResponse.body : '';
+
+      _userInfo = response.statusCode == 200 ? reply: '';
       _isBusy = false;
     });
+    } catch(e)
+    {
+      print(e);
+    }
+    
   }
 }
